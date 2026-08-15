@@ -111,8 +111,9 @@ contract FreelanceBountyBoard {
             status: Status.Open
         });
         emit BountyPosted(newBontyId, msg.sender, msg.value);
-        return newBontyId
-    ;
+        return newBontyId;
+    }
+    
 
     // -----------------------------------------------------------------------
     // TODO 3: applyForBounty
@@ -184,7 +185,7 @@ contract FreelanceBountyBoard {
         Bounty storage b = bounties[bountyId];
 
         require(msg.send == b.employer, "Not the employer");
-        require(b.status == Status.Submitted, " Bounty not in submitted status);
+        require(b.status == Status.Submitted, " Bounty not in submitted status");
         
         b.status = Status.Completed;
         uint256 paymentAmount = b.amount;
@@ -211,12 +212,13 @@ contract FreelanceBountyBoard {
     /// @notice The skill this freelancer registered with ("" if unregistered)
     function getSkill(address freelancer) external view returns (string memory) {
         // Your implementation here
-        return free
+        return freelancers[freelancer].skill;
     }
 
     /// @notice True if this freelancer applied for this bounty
     function hasApplied(uint256 bountyId, address freelancer) external view returns (bool) {
         // Your implementation here
+        return applications[bountyId][freelancer];
     }
 
     /// @notice All of a bounty's details, in this exact order
@@ -232,10 +234,11 @@ contract FreelanceBountyBoard {
         )
     {
         // Your implementation here
+        Bounty storage b = bounties[bountyId];
+        return(b.employer, b.description , b.skillRequired, b.amount, b.status);
     }
 
     // BONUS (not auto-marked, describe it in PartB_Design.md instead):
     // What happens if the employer never approves work that was genuinely done?
     // Sketch a timeout or dispute mechanism.
-}
 }

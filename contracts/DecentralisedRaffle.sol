@@ -39,6 +39,10 @@ contract DecentralisedRaffle {
     // - You also need the number of UNIQUE players, for the 3-player minimum.
     // - The pot is just this contract's balance.
 
+    address[] private entries;
+    mapping(address => uint256) private entryCount;
+    mapping(address => bool) private hasEntered;
+
     constructor() {
         owner = msg.sender;
         raffleId = 1;
@@ -67,7 +71,22 @@ contract DecentralisedRaffle {
     //   unique player
     // - Emit RaffleEntered(msg.sender, <this player's total entries so far>)
     function enterRaffle() external payable {
+
         // Your implementation here
+        require(msg.value>= MINIMUM_ENTRY, "");
+        entries.push(msg.sender);
+        entryCounts[msg.sender]++;
+
+        if(!hasEntered[msg.sender]){
+            hasEntered[msg.sender] = true;
+            uniquePlayerCount++;
+        }
+
+        emit RaffleEntered(
+            msg,sender,
+            entryCounts[msg.sender]
+
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -98,6 +117,26 @@ contract DecentralisedRaffle {
     // code.
     function selectWinner() external onlyOwner {
         // Your implementation here
+        require(block.timestamp >= raffleStartTime + RAFFLE_DURATION, " Raffle durarion has not passed");
+        require(uniquePlayerCount >=3, " At least 3 unique players require");
+        require(entries.length>0, " no entries");
+        
+        uint256 pot = address(this).balance;
+
+        uint256 randomNumber = uint256(
+            keccak256(
+                abi.encodePacked(
+                msg.sender,
+                block.prevrandao
+                )
+            )
+        );
+        uint256 winningIndex = randomNumber % entries.length;
+        address winner = entries[winningIndex];
+
+        uint256 prizeAmount = (pot*90)/ 100;
+        uint256owenerAmount = pot - prizeAmount;
+
     }
 
     // -----------------------------------------------------------------------
@@ -108,10 +147,14 @@ contract DecentralisedRaffle {
     // - Set isPaused, and emit RafflePaused() / RaffleUnpaused()
     function pause() external onlyOwner {
         // Your implementation
+        isPaused = true;
+        emit RaffleUnpaused();
     }
 
     function unpause() external onlyOwner {
         // Your implementation
+                isPaused = false;
+        emit RaffleUnpaused();
     }
 
     // -----------------------------------------------------------------------
@@ -121,21 +164,31 @@ contract DecentralisedRaffle {
     /// @notice The current pot, in wei
     function getPot() external view returns (uint256) {
         // Your implementation here
+        return address(this).balance;
     }
 
     /// @notice How many entries this player has bought this round
     function getEntryCount(address player) external view returns (uint256) {
         // Your implementation here
+
+            return entryCount [player];
+
     }
 
     /// @notice Total number of entries this round, counting repeats
     function getPlayerCount() external view returns (uint256) {
         // Your implementation here
+
+            return entries.length;
+        
     }
 
     /// @notice Number of distinct addresses that have entered this round
     function getUniquePlayerCount() external view returns (uint256) {
         // Your implementation here
+            return uniquePlayerCount;
+        
+
     }
 
     // BONUS (not auto-marked, describe it in PartB_Design.md instead):

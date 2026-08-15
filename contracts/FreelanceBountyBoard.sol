@@ -53,9 +53,9 @@ contract FreelanceBountyBoard {
         Status status;
     }
 
-    mapping(address => Freelance) public freelancer;
+    mapping(address => Freelance) public freelancers;
     mapping(uint256 => Bounty) public bounties;
-    mapping(uint256 => mapping(address => bool)) public application;
+    mapping(uint256 => mapping(address => bool)) public applications;
 
     constructor() {
         owner = msg.sender;
@@ -71,10 +71,10 @@ contract FreelanceBountyBoard {
     // - Emit FreelancerRegistered(msg.sender, skill)
     function registerFreelancer(string calldata skill) external {
         // Your implementation here
-        require(!freelancer[msg.sender].isRegistered, "Already registered");
+        require(!freelancers[msg.sender].isRegistered, "Already registered");
         require(bytes(skill).length > 0," Skills Cant be empty");
 
-        freelancer[msg.sender] = Freelance ({
+        freelancers[msg.sender] = Freelance ({
             isRegistered : true,
             skill: skill
         });
@@ -129,7 +129,7 @@ contract FreelanceBountyBoard {
     //   keccak256(bytes(a)) == keccak256(bytes(b))
     function applyForBounty(uint256 bountyId) external {
         // Your implementation here
-        require(freelancer[msg.sender].isRegistered, "Not registered Freelancer");
+        require(freelancers[msg.sender].isRegistered, "Not registered Freelancer");
         require(bountyId > 0 && bountyId <= bountyCount, " Bounty doesnt exist");
 
         Bounty storage b = bounties[bountyId];
@@ -139,7 +139,7 @@ contract FreelanceBountyBoard {
         "Skill doesnt match"
         );
 
-        require(!application[bountyId][msg.sender], "Already applied");
+        require(!applications[bountyId][msg.sender], "Already applied");
         applications[bountyId][msg.sender] = true;
         emit AppliedForBounty(bountyId, msg.sender);
     }
@@ -154,7 +154,7 @@ contract FreelanceBountyBoard {
     // - Emit WorkSubmitted(bountyId, msg.sender, submissionUrl)
     function submitWork(uint256 bountyId, string calldata submissionUrl) external {
         // Your implementation here
-        require(application[bountyId][msg.sender], "Have not  applied for this");
+        require(applications[bountyId][msg.sender], "Have not  applied for this");
 
         Bounty storage b = bounties[bountyId];
         require(b.status == Status.Open, "Bounty is not open");
@@ -179,12 +179,12 @@ contract FreelanceBountyBoard {
     // and be paid twice. Send with:
     //     (bool ok, ) = freelancer.call{value: amount}("");
     //     require(ok, "Transfer failed");
-    // rather than transfer() or send().
+    // rather than transfer() or sender().
     function approveAndPay(uint256 bountyId, address freelancer) external {
         // Your implementation here
         Bounty storage b = bounties[bountyId];
 
-        require(msg.send == b.employer, "Not the employer");
+        require(msg.sender == b.employer, "Not the employer");
         require(b.status == Status.Submitted, " Bounty not in submitted status");
         
         b.status = Status.Completed;

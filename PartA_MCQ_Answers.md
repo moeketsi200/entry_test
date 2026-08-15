@@ -59,8 +59,7 @@ database?"*
 **Your Answer:** B
 
 **Your Reasoning:**
-[2-3 sentences. What is the actual property a blockchain provides here? Name one
-honest cost of choosing it.]
+[all community members can independently check document without depending on a central administrator, because of blockchain's decentralised and irreversible ledger, and blockchain sacrifice efficiency to  achieve a trustless system]
 
 ---
 
@@ -79,16 +78,15 @@ You send a simple ETH transfer on Ethereum.
 - **C)** 0.00042 ETH (about $1.26)
 - **D)** 0.0042 ETH (about $12.60)
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** C
 
 **Your Calculation:**
 
-- Total gas cost in gwei = [show your working]
-- Converted to ETH (remember: 1 ETH = 1,000,000,000 gwei) = [show your working]
-- Converted to USD = [show your working]
+- Total gas cost in gwei = [21000/20 = 420000{gwei}]
+- Converted to ETH (remember: 1 ETH = 1,000,000,000 gwei) = [420000/1000000000 = 0.00042 ETH]
+- Converted to USD = [0.00042 * 3000 = 1.26]
 
-[Then, in one or two sentences: why does a smart contract function that writes
-to storage cost far more than this simple transfer?]
+[A smart contract modifies the blockchain's state requiring each node in the network to permanet retain that new data, a regular ETH transfer has set baseline cost of 21000 gas. The EVN enforce high gas fee on storage. opcodes to deter network bloat and offset the permanet burden of data storage]
 
 ---
 

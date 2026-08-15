@@ -107,12 +107,10 @@ Your smart contract needs to know the current ETH/USD price.
   in a future upgrade.
 - **D)** Because API providers block blockchain nodes for security reasons.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** B
 
 **Your Reasoning:**
-[2-3 sentences. Why would a single company running the only oracle undermine the
-point of building on a blockchain? What does a decentralised oracle network do
-about that?]
+[A centralised oracle in blockchain setup creates a single point of failure, it requres one entity to manage data which undermines the trustless nature if blockchain]
 
 ---
 
@@ -131,11 +129,10 @@ about that?]
   attacker their own stake. The cost of that stake is also what makes Sybil
   attacks - one actor spinning up thousands of fake nodes - uneconomic.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** D
 
 **Your Reasoning:**
-[2-3 sentences. What does an attacker actually need to acquire to threaten a PoS
-chain, and what do they stand to lose? Name one difference from Proof of Work.]
+[The POS chain it acquire a 51% of the staked token for control, detection of malicious action can results in penalties]
 
 ---
 
@@ -155,7 +152,7 @@ chain, and what do they stand to lose? Name one difference from Proof of Work.]
 - **D)** It reduces gas costs by lowering the base fee on Ethereum itself
   whenever the rollup is active.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** A
 
 **Your Reasoning:**
 [2-3 sentences. Most rollups today run a single centralised sequencer. What can

@@ -94,7 +94,7 @@ and are marked the same way.
 First, check the toolchain:
 
 ```bash
-npx hardhat compile
+x
 ```
 
 It must print **"Compiled 2 Solidity files successfully"**. If it does, you are

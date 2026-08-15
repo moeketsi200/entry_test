@@ -56,7 +56,7 @@ database?"*
 - **D)** "Because a database can only handle a few thousand users, and
   blockchains scale infinitely."
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** B
 
 **Your Reasoning:**
 [2-3 sentences. What is the actual property a blockchain provides here? Name one

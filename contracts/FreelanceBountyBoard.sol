@@ -40,6 +40,23 @@ contract FreelanceBountyBoard {
     //   amount, status) A struct is a good fit here.
     // - How do you remember who applied for which bounty?
 
+    struct Freelance{
+        bool isRegistered;
+        string skill;
+    }
+
+    struct Bounty{
+        address employer;
+        string description;
+        string skillRequired;
+        uint256 amount;
+        Status status;
+    }
+
+    mapping(address => Freelance) public freelancer;
+    mapping(uint256 => Bounty) public bounties;
+    mapping(uint256 => mapping(address => bool)) public application;
+
     constructor() {
         owner = msg.sender;
     }
@@ -54,6 +71,14 @@ contract FreelanceBountyBoard {
     // - Emit FreelancerRegistered(msg.sender, skill)
     function registerFreelancer(string calldata skill) external {
         // Your implementation here
+        require(!freelancer[msg.sender].isRegistered, "Already registered");
+        require(bytes(skill).length > 0," Skills Cant be empty");
+
+        freelancer[msg.sender] = Freelance ({
+            isRegistered : true,
+            skill: skill
+        });
+        emit FreelancerRegistered(msg.sender, skill);
     }
 
     // -----------------------------------------------------------------------
@@ -74,6 +99,19 @@ contract FreelanceBountyBoard {
         returns (uint256)
     {
         // Your implementation here
+        require(msg.value > 0, " Bounty amount must be greater than 0 ");
+        bountyCount ++;
+        uint256 newBontyId = bountyCount;
+
+        bounties[newBontyId] = Bounty({
+            employer: msg.sender,
+            description: description,
+            skillRequired: skillRequired;
+            amount: msg.value,
+            status: Status.Open
+        });
+        emit BountyPosted(newBontyId, msg.sender, msg.value);
+        return newBontyId
     }
 
     // -----------------------------------------------------------------------
@@ -90,6 +128,17 @@ contract FreelanceBountyBoard {
     //   keccak256(bytes(a)) == keccak256(bytes(b))
     function applyForBounty(uint256 bountyId) external {
         // Your implementation here
+        require(freelancer[msg.sender].isRegistered, "Not registered Freelancer");
+        require(bountyId > 0 && bountyId <= bountyCount, " Bounty doesnt exist");
+
+        Bounty storage b = bounties[bountyId];
+        require(b.status == Status.Open, "Bounty is Open");
+
+        require(keccak256(bytes(freelancer[msg.sender].skill)) == keccak256(bytes(b.skillRequired)), "Skill doesnt match");
+
+        require(!application[bountyId][msg.sender], "Already applied");
+        application[bountyId][msg.sender] = true;
+        emit AppliedForBounty(bountyId, msg.sender);
     }
 
     // -----------------------------------------------------------------------

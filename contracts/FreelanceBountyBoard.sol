@@ -106,13 +106,13 @@ contract FreelanceBountyBoard {
         bounties[newBontyId] = Bounty({
             employer: msg.sender,
             description: description,
-            skillRequired: skillRequired;
+            skillRequired: skillRequired,
             amount: msg.value,
             status: Status.Open
         });
         emit BountyPosted(newBontyId, msg.sender, msg.value);
         return newBontyId
-    }
+    ;
 
     // -----------------------------------------------------------------------
     // TODO 3: applyForBounty
@@ -134,10 +134,12 @@ contract FreelanceBountyBoard {
         Bounty storage b = bounties[bountyId];
         require(b.status == Status.Open, "Bounty is Open");
 
-        require(keccak256(bytes(freelancer[msg.sender].skill)) == keccak256(bytes(b.skillRequired)), "Skill doesnt match");
+        require(keccak256(bytes(freelancers[msg.sender].skill)) == keccak256(bytes(b.skillRequired)), 
+        "Skill doesnt match"
+        );
 
         require(!application[bountyId][msg.sender], "Already applied");
-        application[bountyId][msg.sender] = true;
+        applications[bountyId][msg.sender] = true;
         emit AppliedForBounty(bountyId, msg.sender);
     }
 
@@ -151,6 +153,14 @@ contract FreelanceBountyBoard {
     // - Emit WorkSubmitted(bountyId, msg.sender, submissionUrl)
     function submitWork(uint256 bountyId, string calldata submissionUrl) external {
         // Your implementation here
+        require(application[bountyId][msg.sender], "Have not  applied for this");
+
+        Bounty storage b = bounties[bountyId];
+        require(b.status == Status.Open, "Bounty is not open");
+
+        b.status = Status.Submitted;
+
+        emit WorkSubmitted(bountyId, msg.sender, submissionUrl);
     }
 
     // -----------------------------------------------------------------------
@@ -171,6 +181,21 @@ contract FreelanceBountyBoard {
     // rather than transfer() or send().
     function approveAndPay(uint256 bountyId, address freelancer) external {
         // Your implementation here
+        Bounty storage b = bounties[bountyId];
+
+        require(msg.send == b.employer, "Not the employer");
+        require(b.status == Status.Submitted, " Bounty not in submitted status);
+        
+        b.status = Status.Completed;
+        uint256 paymentAmount = b.amount;
+
+        emit BountyPaid(bountyId,freelancer,paymentAmount);
+        (bool ok,) = freelancer.call{value: paymentAmount}("");
+        require(ok, " Transfer failed");
+    
+
+    
+        
     }
 
     // -----------------------------------------------------------------------
@@ -180,11 +205,13 @@ contract FreelanceBountyBoard {
     /// @notice True if this address has registered as a freelancer
     function isRegistered(address freelancer) external view returns (bool) {
         // Your implementation here
+        return freelancers[freelancer].isRegistered;
     }
 
     /// @notice The skill this freelancer registered with ("" if unregistered)
     function getSkill(address freelancer) external view returns (string memory) {
         // Your implementation here
+        return free
     }
 
     /// @notice True if this freelancer applied for this bounty
@@ -210,4 +237,5 @@ contract FreelanceBountyBoard {
     // BONUS (not auto-marked, describe it in PartB_Design.md instead):
     // What happens if the employer never approves work that was genuinely done?
     // Sketch a timeout or dispute mechanism.
+}
 }

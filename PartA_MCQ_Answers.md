@@ -155,8 +155,7 @@ Your smart contract needs to know the current ETH/USD price.
 **Your Answer:** A
 
 **Your Reasoning:**
-[2-3 sentences. Most rollups today run a single centralised sequencer. What can
-that sequencer do to you, and what can it *not* do?]
+[The roll ups can sequencer can temporarily censor, delay or reorder transetions, and it can't forge the user signature or steal funds, and its because of the layer 1 network enforces strict cryptographic rules to protect the assets]
 
 ---
 
@@ -179,11 +178,10 @@ them.
 - **D)** The seed phrase is just a backup of your public address, which is why it
   is safe to share with support staff if you get stuck.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** C
 
 **Your Reasoning:**
-[2-3 sentences. What does a signature prove? What is the trade-off a user accepts
-by holding their own keys, and what does account abstraction do to soften it?]
+[Holding your own crypto keys gives you total control, but it comes with  the harsh reality that if you lose your speed phrase youll lose all of your funds, accounts abstract upgrades walletrs into code contract, allowing the user to bulid in backup recovory.]
 
 ---
 
@@ -218,12 +216,10 @@ uint256 index = uint256(
 - **D)** It is insecure on Ethereum but safe on a Layer 2, because the sequencer
   orders transactions privately.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** B
 
 **Your Reasoning:**
-[2-3 sentences. Who specifically can manipulate this draw, and what would they
-have to do? You will implement this shortcut in Part B anyway - so be clear
-about what you are shipping.]
+[This methord is unsafe because validator can manipulate  the block timestamp and withhold blocks to rig the supposedly random outcome in their favover ]
 
 ---
 
@@ -257,7 +253,7 @@ function approveAndPay(uint256 bountyId, address freelancer) external {
 - **D)** The `require` on `msg.sender` should use `tx.origin` instead, so that
   contracts cannot call the function at all.
 
-**Your Answer:** [A/B/C/D]
+**Your Answer:** C
 
 **Your Reasoning:**
 [2-3 sentences. Walk through the exact sequence an attacking contract would use.
@@ -274,5 +270,4 @@ Then apply the fix in your own `approveAndPay` - it is auto-marked.]
 
 ---
 
-**Challenges faced:** [What was difficult? Which concepts are you least
-confident about? Answering this honestly does not cost you marks.]
+**Challenges faced:** [To be quite honest i didnt enconter a difficult on thei section, The Gas Cost, because i love math, paniced for a sec because of the time. ]
